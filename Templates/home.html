@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title> {% block title %} 云卷云舒 {% endblock %} </title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" type="text/css" media="all" href="{{STATIC_URL}}css/main.css" />
+<!--[if lt IE 9]>
+<script src="{{STATIC_URL}}css/html5.js" type="text/javascript"></script>
+<![endif]-->
+</head>
+
+<body class="home blog single-author two-column right-sidebar">
+<div id="page" class="hfeed">
+{% block header %}
+	<header id="branding" role="banner">
+		<h1 id="site-title"><span><a href="{% url home %}" title="云卷云舒" rel="home">云卷云舒</a></span></h1>
+		<p></p>
+		<a href="{% url home %}">
+		<img src="{{STATIC_URL}}images/lavender.jpg" style="height: 300px;" alt="薰衣草的小站" />
+		</a>
+			
+	<form method="POST" id="searchform" action="{% url search %}">
+		 {% csrf_token %} 
+		<input type="text" class="field" name="title" id="id_filter" placeholder="搜索" />
+	</form>	
+		<nav id="access" role="navigation">	
+			{% block nav_top %} <div class="menu"><ul>
+			<li class="current_page_item"><a href="{% url home %}" title="首页">首页</a></li>
+			</ul></div> {% endblock %}
+				
+			</nav><!-- #access -->
+	</header><!-- #branding -->
+{% endblock %}	
+{% block main %}
+	<div id="main">
+		<div id="primary">
+			<div id="content" role="main">
+		{% for obj in objs %}
+		<article id="post-40" class="post-40 post type-post status-publish format-standard hentry category-1">
+		<header class="entry-header">
+			<h1 class="entry-title"><a href="{% url page obj.id %}">{{obj.name}}</a></h1>
+			<div class="entry-meta">
+				<span class="sep"><em>发表于{{ obj.created_on|date:'Y-m-d'|default_if_none:""}}</em> </span>
+			</div>
+			
+			<div class="comments-link">
+				<a href="{% url page obj.id %}#comments" >{{ obj.comment_set.count}}</a></div>
+		</header>
+		<div class="entry-content"><p>{{obj.content}}</p></div>
+		</article>
+		{% endfor %}
+			</div><!-- #content -->
+		</div><!-- #primary -->
+		{% block nav_right%}
+		<div id="secondary" class="widget-area" role="complementary">			
+			<aside id="archives" class="widget">
+				<h3 class="widget-title">导航</h3>
+				<ul>
+				{% for obj in objs %}
+				<li><a href='{% url page obj.id %}' >{{ obj.name }}</a></li>
+				{% endfor %}	
+				</ul>
+			</aside>
+		</div><!-- #secondary .widget-area -->
+		{% endblock %}
+	</div><!-- #main -->
+{% endblock %}
+
+	
+{% block footer %} 
+	<footer id="colophon" role="contentinfo">
+	<div id="site-generator">
+	<p>
+        Powered by xunxun.me
+    </p>
+	</div>
+	</footer><!-- #colophon -->
+{% endblock %}	
+</div><!-- #page -->
+</body>	
+	
+{% block footer_js%}
+<script src="{{STATIC_URL}}js/jquery-1.4.2.min.js"></script>
+ <script type="text/javascript">
+	$("#id_filter").keyup(function(event){
+		if(event.keyCode==13)
+		{
+			$("#searchform").submit(function () {});
+			
+		}
+	}); 
+{% endblock %}
+
+</html>
